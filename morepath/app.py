@@ -66,19 +66,6 @@ class App(GenericApp):
     def __init__(self):
         pass
 
-    @reify
-    def lookup(self):
-        """Get the :class:`reg.Lookup` for this application.
-
-        :return: a :class:`reg.Lookup` instance.
-        """
-        # this in turn uses a cached lookup from the reg_registry
-        # the caching happens on the reg_registry and not here to
-        # ensure that each instance of App uses the same cache.
-        if not self.is_committed():
-            self.commit()
-        return self.config.reg_registry.caching_lookup
-
     def request(self, environ):
         """Create a :class:`Request` given WSGI environment for this app.
 
@@ -263,10 +250,7 @@ class App(GenericApp):
         no identity can be found. Can also return :data:`morepath.NO_IDENTITY`,
         but ``None`` is converted automatically to this.
         """
-        ip = self.config.identity_policy_registry.identity_policy
-        if ip is None:
-            return None
-        return ip.identify(request)
+        return None
 
     def remember_identity(self, response, request, identity):
         """Modify response so that identity is remembered by client.
@@ -275,10 +259,7 @@ class App(GenericApp):
         :param request: :class:`morepath.Request`
         :param identity: :class:`morepath.Identity`
         """
-        ip = self.config.identity_policy_registry.identity_policy
-        if ip is None:
-            return
-        return ip.remember(response, request, identity)
+        pass
 
     def forget_identity(self, response, request):
         """Modify response so that identity is forgotten by client.
@@ -286,10 +267,7 @@ class App(GenericApp):
         :param response: :class:`morepath.Response` to forget identity on.
         :param request: :class:`morepath.Request`
         """
-        ip = self.config.identity_policy_registry.identity_policy
-        if ip is None:
-            return
-        return ip.forget(response, request)
+        pass
 
     def _get_path(self, obj):
         """Path for a model obj.
