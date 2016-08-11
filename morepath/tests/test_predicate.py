@@ -28,6 +28,8 @@ def test_dispatch_method_directive():
     def f_bar(self, obj):
         return "bar"
 
+    App.commit()
+
     a = App()
 
     assert a.f(Foo()) == 'foo'
@@ -58,6 +60,8 @@ def test_dispatch_function_directive():
     def f_bar(obj):
         return "bar"
 
+    App.commit()
+
     a = App()
 
     assert a.f(Foo()) == 'foo'
@@ -67,7 +71,7 @@ def test_dispatch_function_directive():
 
 def test_dispatch_external_predicates():
     class App(morepath.App):
-        @reg.dispatch_method_external_predicates()
+        @reg.dispatch_method()
         def f(self, obj):
             return "fallback"
 
@@ -91,6 +95,8 @@ def test_dispatch_external_predicates():
     @App.function(App.f, model=Bar)
     def f_bar(obj):
         return "bar"
+
+    App.commit()
 
     a = App()
 
@@ -129,6 +135,8 @@ def test_dispatch_external_predicates_predicate_fallback():
     @App.function(App.f, model=Bar)
     def f_bar(obj):
         return "bar"
+
+    App.commit()
 
     a = App()
 
@@ -176,6 +184,8 @@ def test_dispatch_external_predicates_ordering_after():
     @App.function(App.f, model=Bar, name='edit')
     def f_bar_edit(obj, name):
         return "bar edit"
+
+    App.commit()
 
     a = App()
 
@@ -227,6 +237,8 @@ def test_dispatch_external_predicates_ordering_before():
     @App.function(App.f, model=Bar, name='edit')
     def f_bar_edit(obj, name):
         return "bar edit"
+
+    App.commit()
 
     a = App()
 
@@ -280,6 +292,9 @@ def test_dispatch_external_override_fallback():
     @App.function(App.f, model=Bar)
     def f_bar(obj):
         return "bar"
+
+    App.commit()
+    Sub.commit()
 
     s = Sub()
 
@@ -341,6 +356,9 @@ def test_dispatch_external_override_predicate():
     def f_bar_sub(obj):
         return "bar sub"
 
+    App.commit()
+    Sub.commit()
+
     s = Sub()
 
     assert s.f(Foo()) == 'bar sub'
@@ -367,6 +385,8 @@ def test_wrong_predicate_arguments_single():
     def f_foo(obj):
         return "foo"
 
+    App.commit()
+
     a = App()
 
     assert a.f(Foo()) == 'fallback'
@@ -385,23 +405,11 @@ def test_wrong_predicate_arguments_multi():
     def f_foo(a, b):
         return "foo"
 
+    App.commit()
+
     a = App()
 
     assert a.f(Foo(), Foo()) == 'fallback'
-
-
-def test_predicate_not_for_dispatch_external_predicates():
-    class App(morepath.App):
-        @reg.dispatch_method('a')
-        def f(self, a):
-            pass
-
-    @App.predicate(App.f, name='model', default=None, index=ClassIndex)
-    def model_predicate(a):
-        return a.__class__
-
-    with pytest.raises(ConfigError):
-        App.commit()
 
 
 def test_dispatch_external_predicates_without_predicate_directives():
@@ -422,6 +430,8 @@ def test_dispatch_external_predicates_without_predicate_directives():
     @App.function(App.f)
     def f_foo(obj):
         return "foo"
+
+    App.commit()
 
     a = App()
 
