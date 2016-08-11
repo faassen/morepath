@@ -285,7 +285,6 @@ def test_verify_identity_directive():
     assert app()._verify_identity(identity)
 
 
-
 def test_verify_identity_directive_app_arg():
     class App(morepath.App):
         pass
