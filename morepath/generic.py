@@ -148,3 +148,14 @@ class GenericApp(dectate.App):
         that can construct link.
         """
         return None
+
+    @classmethod
+    def clean(cls):
+        from reg.dispatch import MethodDispatch
+        for name in dir(cls):
+            attr = getattr(cls, name)
+            im_func = getattr(attr, 'im_func', None)
+            if im_func is None:
+                continue
+            if isinstance(im_func, MethodDispatch):
+                attr.clean()
