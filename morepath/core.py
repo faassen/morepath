@@ -175,10 +175,7 @@ def excview_tween_factory(app, handler):
             # do not want the request to feature in the lookup;
             # we don't want its request method or name to influence
             # exception lookup
-            # XXX an ugly hack to access the component_key_dict
-            # on the dispatch method, as we cannot get it from the
-            # partial function shortcut...
-            view = app.__class__._view.component_key_dict(model=exc.__class__)
+            view = app._view.component_key_dict(model=exc.__class__)
             if view is None:
                 raise
 
