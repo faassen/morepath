@@ -3,8 +3,12 @@ import reg
 from webob.exc import HTTPNotFound
 
 
+def cached_key_lookup(key_lookup):
+    return reg.CachingKeyLookup(key_lookup, 1000, 1000, 1000)
+
+
 class GenericApp(dectate.App):
-    @reg.dispatch_method()
+    @reg.dispatch_method(get_key_lookup=cached_key_lookup)
     def _view(self, obj, request):
         """Get the view that represents the obj in the context of a request.
 
@@ -22,7 +26,7 @@ class GenericApp(dectate.App):
         """
         return HTTPNotFound()
 
-    @reg.dispatch_method('identity')
+    @reg.dispatch_method('identity', get_key_lookup=cached_key_lookup)
     def _verify_identity(self, identity):
         """Returns True if the claimed identity can be verified.
 
@@ -37,7 +41,8 @@ class GenericApp(dectate.App):
 
     @reg.dispatch_method('identity', 'obj',
                          reg.match_class('permission',
-                                         lambda permission: permission))
+                                         lambda permission: permission),
+                         get_key_lookup=cached_key_lookup)
     def _permits(self, identity, obj, permission):
         """Returns ``True`` if identity has permission for model object.
 
@@ -63,7 +68,7 @@ class GenericApp(dectate.App):
         """
         return json
 
-    @reg.dispatch_method('obj')
+    @reg.dispatch_method('obj', get_key_lookup=cached_key_lookup)
     def _dump_json(self, obj, request):
         """Dump an object as JSON.
 
@@ -85,7 +90,8 @@ class GenericApp(dectate.App):
         """
         return request.application_url
 
-    @reg.dispatch_method(reg.match_class('model', lambda model: model))
+    @reg.dispatch_method(reg.match_class('model', lambda model: model),
+                         get_key_lookup=cached_key_lookup)
     def _class_path(self, model, variables):
         """Get the path for a model class.
 
@@ -97,7 +103,7 @@ class GenericApp(dectate.App):
         """
         return None
 
-    @reg.dispatch_method('obj')
+    @reg.dispatch_method('obj', get_key_lookup=cached_key_lookup)
     def _path_variables(self, obj):
         """Get variables to use in path generation.
 
@@ -107,7 +113,7 @@ class GenericApp(dectate.App):
         """
         return self._default_path_variables(obj)
 
-    @reg.dispatch_method('obj')
+    @reg.dispatch_method('obj', get_key_lookup=cached_key_lookup)
     def _default_path_variables(self, obj):
         """Get default variables to use in path generation.
 
@@ -119,7 +125,7 @@ class GenericApp(dectate.App):
         """
         return None
 
-    @reg.dispatch_method('obj')
+    @reg.dispatch_method('obj', get_key_lookup=cached_key_lookup)
     def _deferred_link_app(self, obj):
         """Get application used for link generation.
 
@@ -130,7 +136,8 @@ class GenericApp(dectate.App):
         """
         return None
 
-    @reg.dispatch_method(reg.match_class('model', lambda model: model))
+    @reg.dispatch_method(reg.match_class('model', lambda model: model),
+                         get_key_lookup=cached_key_lookup)
     def _deferred_class_link_app(self, model, variables):
         """Get application used for link generation for a model class.
 
