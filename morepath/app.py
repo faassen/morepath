@@ -376,14 +376,14 @@ class App(GenericApp):
             if result is not None:
                 return result, app
             seen.add(app)
-            next_app = app._deferred_link_app(app, obj)
+            next_app = app._deferred_link_app(obj)
             if next_app is None:
                 # only if we can establish the variables of the app here
                 # fall back on using class link app
                 variables = app._path_variables(obj)
                 if variables is not None:
                     next_app = app._deferred_class_link_app(
-                        app, obj.__class__, variables)
+                        obj.__class__, variables)
             app = next_app
         return None, app
 
@@ -412,6 +412,5 @@ class App(GenericApp):
             if result is not None:
                 return result, app
             seen.add(app)
-            app = app._deferred_class_link_app(
-                app, model, variables)
+            app = app._deferred_class_link_app(model, variables)
         return None, app

@@ -175,7 +175,7 @@ class PathRegistry(TrajectRegistry):
           object as arguments and should return another app instance that
           does the link generation.
         """
-        self.app_class._deferred_link_app.register_auto(
+        self.app_class._deferred_link_app.register(
             app_factory,
             obj=model)
 
@@ -191,7 +191,7 @@ class PathRegistry(TrajectRegistry):
           app instance that does the link generation.
         """
         self.register_path_variables(model, get_variables)
-        self.app_class._deferred_class_link_app.register_auto(
+        self.app_class._deferred_class_link_app.register(
             app_factory,
             model=model)
 

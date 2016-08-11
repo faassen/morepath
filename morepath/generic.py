@@ -120,10 +120,9 @@ class GenericApp(dectate.App):
         return None
 
     @reg.dispatch_method('obj')
-    def _deferred_link_app(self, mounted, obj):
+    def _deferred_link_app(self, obj):
         """Get application used for link generation.
 
-        :param mounted: current :class:`morepath.App` instance.
         :param obj: model object to link to.
         :return: instance of :class:`morepath.App` subclass that handles
         link generation for this model, or ``None`` if no app exists
@@ -132,10 +131,9 @@ class GenericApp(dectate.App):
         return None
 
     @reg.dispatch_method(reg.match_class('model', lambda model: model))
-    def _deferred_class_link_app(self, mounted, model, variables):
+    def _deferred_class_link_app(self, model, variables):
         """Get application used for link generation for a model class.
 
-        :param mounted: current :class:`morepath.App` instance.
         :param model: model class
         :param variables: dict of variables used to construct class link
         :return: instance of :class:`morepath.App` subclass that handles
