@@ -10,8 +10,6 @@ directive.
 See also :class:`morepath.directive.IdentityPolicyRegistry`
 """
 
-from .settings import SettingRegistry
-
 
 class NoIdentity(object):
     """The user is not yet logged in.
